@@ -59,7 +59,7 @@ of these conditions is met:
 If you like this project and want to support it, show some love
 and give it a star.
 
-Special thanks to [flawk.to](flawk.to) for allowing me to share this code with the public.
+Special thanks to [flawk.to](http://www.flawk.to) for allowing me to share this code with the public.
 
 
 ## Contact
