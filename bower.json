@@ -1,0 +1,33 @@
+{
+  "name": "famous-autofontsizesurface",
+  "version": "0.3.0",
+  "homepage": "https://github.com/IjzerenHein/famous-autofontsizesurface",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/IjzerenHein/famous-autofontsizesurface.git"
+  },
+  "authors": [
+    "Hein Rutjes <hrutjes@gmail.com>"
+  ],
+  "description": "Surface that automatically scales the font-size based on the content.",
+  "keywords": [
+    "famo.us",
+    "famous",
+    "autoscale",
+    "autofontsize",
+    "autofontsizesurface",
+    "fontsizesurface",
+    "fontsize"
+  ],
+  "license": "MIT",
+  "main": "AutoFontSizeSurface.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "demo",
+    "Gruntfile.js",
+    "CONTRIBUTORS.md",
+    "package.json"
+  ]
+}
