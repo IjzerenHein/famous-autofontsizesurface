@@ -6,11 +6,6 @@
     "type": "git",
     "url": "git://github.com/IjzerenHein/famous-autofontsizesurface.git"
   },
-  "browserify": {
-    "transform": [
-      "deamdify"
-    ]
-  },
   "author": {
     "name": "Hein Rutjes <hrutjes@gmail.com>"
   },
@@ -38,8 +33,6 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
-    "browserify": "latest",
-    "deamdify": "latest",
     "grunt": "latest",
     "grunt-eslint": "latest",
     "grunt-jscs": "latest"
@@ -47,5 +40,10 @@
   "files": [
     "AutoFontSizeSurface.js",
     "LICENSE"
-  ]
+  ],
+  "browserify": {
+    "transform": [
+      "deamdify"
+    ]
+  }
 }
