@@ -92,31 +92,36 @@ define(function(require, exports, module) {
 
         // Caluclate preferred height
         if (this._currentTarget && this._hiddenSurface._currentTarget && this._invalidated) {
-            this._hiddenSurface._currentTarget.innerHTML = this._currentTarget.innerHTML;
+            var hiddenEl = this._hiddenSurface._currentTarget;
+            hiddenEl.innerHTML = this._currentTarget.innerHTML;
             this._invalidated = false;
 
             var fontSize = this._fontSize;
             var fontSizeStr = fontSize + this._fontSizeUnit;
-            if (this._hiddenSurface._currentTarget.style.fontSize !== fontSizeStr) {
-                this._hiddenSurface._currentTarget.style.fontSize = fontSizeStr;
+            if (hiddenEl.style.fontSize !== fontSizeStr) {
+                hiddenEl.style.fontSize = fontSizeStr;
             }
-            if (this._hiddenSurface._currentTarget.clientHeight < context.size[1]) {
+            if ((hiddenEl.clientHeight < context.size[1]) &&
+                (hiddenEl.scrollWidth <= Math.ceil(context.size[0]))) {
                 while (fontSize < this._fontSizeRange[1]) {
-                    this._hiddenSurface._currentTarget.style.fontSize = (fontSize + 1) + this._fontSizeUnit;
-                    if (this._hiddenSurface._currentTarget.clientHeight > context.size[1]) {
-                        this._hiddenSurface._currentTarget.style.fontSize = fontSizeStr;
+                    hiddenEl.style.fontSize = (fontSize + 1) + this._fontSizeUnit;
+                    if ((hiddenEl.clientHeight > context.size[1]) ||
+                        (hiddenEl.scrollWidth > Math.ceil(context.size[0]))) {
+                        hiddenEl.style.fontSize = fontSizeStr;
                         break;
                     }
                     fontSize++;
                     fontSizeStr = fontSize + this._fontSizeUnit;
                 }
             }
-            else if (this._hiddenSurface._currentTarget.clientHeight > context.size[1]) {
+            else if ((hiddenEl.clientHeight > context.size[1]) ||
+                     (hiddenEl.scrollWidth > Math.ceil(context.size[0]))) {
                 while (fontSize > this._fontSizeRange[0]) {
                     fontSize--;
                     fontSizeStr = fontSize + this._fontSizeUnit;
-                    this._hiddenSurface._currentTarget.style.fontSize = fontSizeStr;
-                    if (this._hiddenSurface._currentTarget.clientHeight < context.size[1]) {
+                    hiddenEl.style.fontSize = fontSizeStr;
+                    if ((hiddenEl.clientHeight <= context.size[1]) &&
+                        (hiddenEl.scrollWidth <= Math.ceil(context.size[0]))) {
                         break;
                     }
                 }
