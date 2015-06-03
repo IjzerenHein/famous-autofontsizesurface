@@ -96,7 +96,7 @@ define(function(require, exports, module) {
             hiddenEl.innerHTML = this._currentTarget.innerHTML;
             this._invalidated = false;
 
-            var fontSize = this._fontSize;
+            var fontSize = Math.max(Math.min(this._fontSize, this._fontSizeRange[1]), this._fontSizeRange[0]);
             var fontSizeStr = fontSize + this._fontSizeUnit;
             if (hiddenEl.style.fontSize !== fontSizeStr) {
                 hiddenEl.style.fontSize = fontSizeStr;
