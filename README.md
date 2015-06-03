@@ -39,6 +39,11 @@ autoFontSizeSurface.setOptions({
 });
 ```
 
+To get the in-use fontSizeRange, use:
+
+```javascript
+var fontSizeRange = autoFontSizeSurface.getFontSizeRange();
+```
 
 ## How it works
 

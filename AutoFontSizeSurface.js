@@ -242,5 +242,19 @@ define(function(require, exports, module) {
         return Surface.prototype.setOptions.apply(this, arguments);
     };
 
+    /**
+     * Returns the font-size range that has been set.
+     */
+    AutoFontSizeSurface.prototype.getFontSizeRange = function() {
+        return this._fontSizeRange;
+    };
+
+    /**
+     * Returns the font-size range that has been set.
+     */
+    AutoFontSizeSurface.prototype.getFontSizeUnit = function() {
+        return this._fontSizeUnit;
+    };
+
     module.exports = AutoFontSizeSurface;
 });
