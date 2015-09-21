@@ -26,12 +26,13 @@ define(function(require, exports, module) {
         if (!options.fontSizeRange) {
             throw 'No fontSizeRange specified';
         }
+        this.debug = options.debug;
+        this._fontSize = options.initialFontSize;
         this._fontSizeUnit = 'px';
         this._invalidated = true;
         this._oldCachedSize = [0, 0];
         _createHiddenSurface.call(this);
         Surface.apply(this, arguments);
-        this._fontSize = this._fontSizeRange[1];
         this._recalcTrigger = AutoFontSizeSurface.recalcTrigger;
     }
     AutoFontSizeSurface.prototype = Object.create(Surface.prototype);
@@ -68,6 +69,70 @@ define(function(require, exports, module) {
     };
 
     /**
+     * Finds the optimal font-size using a binary search algorithm.
+     * The algorithm first searches in the current range, also gradually
+     * increases the steps until it finally uses a binary search.
+     */
+    function _calcFontSize(size, fontSize) {
+        var el = this._hiddenSurface._currentTarget;
+        var lowerBound = this._fontSizeRange[0];
+        var upperBound = this._fontSizeRange[1];
+        fontSize = fontSize || 15; // initial value
+        fontSize = Math.min(Math.max(fontSize, lowerBound), upperBound);
+        var fontSizeStr = fontSize + this._fontSizeUnit;
+        var maxStepSize = 1;
+        if (el.style.fontSize !== fontSizeStr) {
+          el.style.fontSize = fontSizeStr;
+        }
+        if (this.debug) {
+          console.log('initial font-size: ' + fontSize); //eslint-disable-line no-console
+        }
+        while (lowerBound < upperBound) {
+
+            //too small (or just exactly right...), try bigger fonts
+            if ((el.clientHeight < size[1]) && (el.scrollWidth <= Math.ceil(size[0]))) {
+                lowerBound = Math.max(lowerBound, fontSize);
+                if (lowerBound < upperBound) {
+                  fontSize = lowerBound + Math.min(Math.max(1, Math.floor((upperBound - lowerBound) / 2)), maxStepSize);
+                  maxStepSize *= 2;
+                  fontSizeStr = fontSize + this._fontSizeUnit;
+                  el.style.fontSize = fontSizeStr;
+                  if (this.debug) {
+                    console.log('test font-size: ' + fontSize); //eslint-disable-line no-console
+                  }
+                }
+            }
+
+            //too big, try smaller fonts
+            else if ((el.clientHeight > size[1]) || (el.scrollWidth > Math.ceil(size[0]))) {
+                upperBound = Math.min(upperBound, fontSize - 1); // decrease upperbound
+                if (lowerBound < upperBound) {
+                  fontSize = upperBound - Math.min(Math.ceil((upperBound - lowerBound) / 2), maxStepSize);
+                  maxStepSize *= 2;
+                  fontSizeStr = fontSize + this._fontSizeUnit;
+                  el.style.fontSize = fontSizeStr;
+                  if (this.debug) {
+                    console.log('test font-size: ' + fontSize); //eslint-disable-line no-console
+                  }
+                }
+            }
+            else {
+              lowerBound = fontSize;
+              upperBound = fontSize;
+            }
+        }
+        fontSize = lowerBound;
+        fontSizeStr = fontSize + this._fontSizeUnit;
+        if (el.style.fontSize !== fontSizeStr) {
+          el.style.fontSize = fontSizeStr;
+        }
+        if (this.debug) {
+          console.log('settled on font-size: ' + fontSize); //eslint-disable-line no-console
+        }
+        return fontSize;
+    }
+
+    /**
      * Apply changes from this component to the corresponding document element.
      * This includes changes to classes, styles, size, content, opacity, origin,
      * and matrix transforms.
@@ -95,40 +160,10 @@ define(function(require, exports, module) {
             var hiddenEl = this._hiddenSurface._currentTarget;
             hiddenEl.innerHTML = this._currentTarget.innerHTML;
             this._invalidated = false;
-
-            var fontSize = Math.max(Math.min(this._fontSize, this._fontSizeRange[1]), this._fontSizeRange[0]);
-            var fontSizeStr = fontSize + this._fontSizeUnit;
-            if (hiddenEl.style.fontSize !== fontSizeStr) {
-                hiddenEl.style.fontSize = fontSizeStr;
-            }
-            if ((hiddenEl.clientHeight < context.size[1]) &&
-                (hiddenEl.scrollWidth <= Math.ceil(context.size[0]))) {
-                while (fontSize < this._fontSizeRange[1]) {
-                    hiddenEl.style.fontSize = (fontSize + 1) + this._fontSizeUnit;
-                    if ((hiddenEl.clientHeight > context.size[1]) ||
-                        (hiddenEl.scrollWidth > Math.ceil(context.size[0]))) {
-                        hiddenEl.style.fontSize = fontSizeStr;
-                        break;
-                    }
-                    fontSize++;
-                    fontSizeStr = fontSize + this._fontSizeUnit;
-                }
-            }
-            else if ((hiddenEl.clientHeight > context.size[1]) ||
-                     (hiddenEl.scrollWidth > Math.ceil(context.size[0]))) {
-                while (fontSize > this._fontSizeRange[0]) {
-                    fontSize--;
-                    fontSizeStr = fontSize + this._fontSizeUnit;
-                    hiddenEl.style.fontSize = fontSizeStr;
-                    if ((hiddenEl.clientHeight <= context.size[1]) &&
-                        (hiddenEl.scrollWidth <= Math.ceil(context.size[0]))) {
-                        break;
-                    }
-                }
-            }
-            this._fontSize = fontSize;
+            this._fontSize = _calcFontSize.call(this, context.size, this._fontSize);
+            var fontSizeStr = this._fontSize + this._fontSizeUnit;
             if (this._currentTarget.style.fontSize !== fontSizeStr) {
-                this._currentTarget.style.fontSize = fontSizeStr;
+              this._currentTarget.style.fontSize = fontSizeStr;
             }
 
             // The first time this surfaces was commited to the DOM, recalc after a second
