@@ -48,13 +48,13 @@ var fontSizeRange = autoFontSizeSurface.getFontSizeRange();
 To get the calculated font-size:
 
 ```javascript
-var fontSizeRange = autoFontSizeSurface.getFontSize();
+var fontSize = autoFontSizeSurface.getFontSize();
 ```
 
 When the calculated font-size changed, the `fontSizeChanged` event is emitted:
 
 ```javascript
-var fontSizeRange = autoFontSizeSurface.on('fontSizeChanged', function (fontSize) {
+autoFontSizeSurface.on('fontSizeChanged', function (fontSize) {
     console.log('fontsize is now: ' + fontSize);
 });
 ```
