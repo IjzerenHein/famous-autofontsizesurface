@@ -160,10 +160,14 @@ define(function(require, exports, module) {
             var hiddenEl = this._hiddenSurface._currentTarget;
             hiddenEl.innerHTML = this._currentTarget.innerHTML;
             this._invalidated = false;
-            this._fontSize = _calcFontSize.call(this, context.size, this._fontSize);
-            var fontSizeStr = this._fontSize + this._fontSizeUnit;
+            var fontSize = _calcFontSize.call(this, context.size, this._fontSize);
+            var fontSizeStr = fontSize + this._fontSizeUnit;
             if (this._currentTarget.style.fontSize !== fontSizeStr) {
               this._currentTarget.style.fontSize = fontSizeStr;
+            }
+            if (this._fontSize !== fontSize) {
+              this._fontSize = fontSize;
+              this._eventOutput.emit('fontSizeChanged', this._fontSize);
             }
 
             // The first time this surfaces was commited to the DOM, recalc after a second
@@ -289,6 +293,13 @@ define(function(require, exports, module) {
      */
     AutoFontSizeSurface.prototype.getFontSizeUnit = function() {
         return this._fontSizeUnit;
+    };
+
+    /**
+     * Returns the current calculated the font-size.
+     */
+    AutoFontSizeSurface.prototype.getFontSize = function() {
+        return this._fontSize;
     };
 
     module.exports = AutoFontSizeSurface;

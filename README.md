@@ -45,6 +45,21 @@ To get the in-use fontSizeRange, use:
 var fontSizeRange = autoFontSizeSurface.getFontSizeRange();
 ```
 
+To get the calculated font-size:
+
+```javascript
+var fontSizeRange = autoFontSizeSurface.getFontSize();
+```
+
+When the calculated font-size changed, the `fontSizeChanged` event is emitted:
+
+```javascript
+var fontSizeRange = autoFontSizeSurface.on('fontSizeChanged', function (fontSize) {
+    console.log('fontsize is now: ' + fontSize);
+});
+```
+
+
 ## How it works
 
 AutoFontSizeSurface creates a second hidden Surface in the DOM with a true-size height. This hidden surface is used to
@@ -70,6 +85,6 @@ Special thanks to [flawk.to](http://www.flawk.to) for allowing me to share this 
 ## Contact
 - 	@IjzerenHein
 - 	http://www.gloey.nl
-- 	hrutjes@gmail.com (for hire)
+- 	hrutjes@gmail.com
 
 © 2015 - Hein Rutjes
