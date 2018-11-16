@@ -81,10 +81,4 @@ and give it a star.
 
 Special thanks to [flawk.to](http://www.flawk.to) for allowing me to share this code with the public.
 
-
-## Contact
-- 	@IjzerenHein
-- 	http://www.gloey.nl
-- 	hrutjes@gmail.com
-
 © 2015 - Hein Rutjes
